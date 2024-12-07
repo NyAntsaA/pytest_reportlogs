@@ -1,0 +1,33 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pytest_reportlogs"
+version = "0.1.0"
+description = "A pytest plugin to add a extra logs to the final report, mainly meant to report test steps"
+readme = "README.md"
+authors = [
+  {name = "Ny Antsa Andriantsoa", email = "nyandriantsoa@gmail.com"}
+]
+classifiers = [
+
+]
+license = {text = "MIT license"}
+dependencies = [
+   "pytest"
+]
+requires-python = ">=3.7"
+
+[project.urls]
+bugs = "https://github.com/NyAntsaA/pytest_reportlogs/issues"
+homepage = "https://github.com/NyAntsaA/pytest_reportlogs"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.package-data]
+"*" = ["*.*"]
+
+[project.entry-points.pytest11]
+reportlogs = "pytest_reportlogs.plugin"
