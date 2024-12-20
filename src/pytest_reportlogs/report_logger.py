@@ -21,7 +21,7 @@ class ReportLogger(Singleton):
         self._steps_counter = 0
         self._logger = logging.getLogger(REPORTLOGS_LOGGER_NAME)
 
-    def report_log(self, msg: str, is_step: bool = True):
+    def report_log(self, msg: str, is_step: bool = False):
         """
         API for reporting useful information
         This is the only interface to be used in the tests
@@ -34,8 +34,8 @@ class ReportLogger(Singleton):
         is_step: bool, optional
             set it to
              - True if the information should be treated as a test step
-             - False if a simple useful information 
-            default: True
+             - False if a simple useful information
+            default: False
 
         """
         formatted_msg = self._log_formatter(msg, is_step)

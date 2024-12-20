@@ -15,11 +15,17 @@ def test_steps_formatting():
 
     a = b = 0
     assert a == b
-    report_log("Simple test step description")
+    report_log(
+        "Simple test step description",
+        is_step=True,
+    )
 
     a = b = 1
     assert a == b
-    report_log("Very long test step description" + "* " * 100)
+    report_log(
+        "Very long test step description" + "* " * 100,
+        is_step=True,
+    )
 
 
 def test_useful_info_formatting():
@@ -29,11 +35,11 @@ def test_useful_info_formatting():
 
     a = b = 0
     assert a == b
-    report_log("Simple useful information", False)
+    report_log("Simple useful information")
 
     a = b = 1
     assert a == b
-    report_log("Very long useful information " + "* " * 100, False)
+    report_log("Very long useful information " + "* " * 100)
 
     a = b = 2
     assert a == b
@@ -41,7 +47,7 @@ def test_useful_info_formatting():
 This is the first line.
 This is another line.
 """
-    report_log(multiline_info, False)
+    report_log(multiline_info)
 
 
 def test_mixed_steps_and_useful_info():
@@ -51,10 +57,16 @@ def test_mixed_steps_and_useful_info():
 
     a = b = 0
     assert a == b
-    report_log("Some test step description")
-    report_log("Some useful information", False)
+    report_log(
+        "Some test step description",
+        is_step=True,
+    )
+    report_log("Some useful information")
 
     a = b = 1
     assert a == b
-    report_log("Some other test step description")
-    report_log("Some other useful information", False)
+    report_log(
+        "Some other test step description",
+        is_step=True,
+    )
+    report_log("Some other useful information")
