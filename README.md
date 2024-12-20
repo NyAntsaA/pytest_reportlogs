@@ -20,7 +20,7 @@ pip install git+https://github.com/NyAntsaA/pytest_reportlogs
 
 Import and use **report_log** in the test file.
 
-### Usage for reporting an information as a test step
+### Usage for reporting information as a test step
 ```
 from pytest_reportlogs import report_log
 
@@ -40,7 +40,7 @@ def test_step_example():
 
 ```
 
-### Usage for reporting an information as a normal log
+### Usage for reporting information as a normal log
 ```
 from pytest_reportlogs import report_log
 

@@ -1,28 +1,19 @@
+# -*- coding: utf-8 -*-
+
+import logging
+
 import pytest
 
-from pytest_reportlogs.report_logger import ReportLogger
+from pytest_reportlogs.report_logger import (
+    ReportLogger,
+    REPORTLOGS_LOGGER_NAME,
+)
+
+REPORTLOGS_SECTION_HEADER = "reported logs"
 
 __report_logger = ReportLogger()
 
 report_log = __report_logger.report_log  # import this in test
-
-MAX_LOG_LENGTH = 80
-STEP_PASSED_MARKER = "- [OK]"
-
-
-def _log_formatter(msg, step_nb=None):
-    formatted_log = ""
-    if step_nb:
-        formatted_log += f"    [Step #{step_nb}] {msg} "
-        formatted_log += "-" * (MAX_LOG_LENGTH - len(STEP_PASSED_MARKER))
-        formatted_log = formatted_log[: (MAX_LOG_LENGTH - len(STEP_PASSED_MARKER))]
-        formatted_log += STEP_PASSED_MARKER + "\n"
-    else:
-        for j, m in enumerate(msg.splitlines()):
-            prefix = "      " if j else "    "
-            formatted_log += f"{prefix}{m}\n"
-
-    return formatted_log
 
 
 @pytest.fixture(scope="function", autouse=True)
@@ -32,7 +23,12 @@ def steps_list():
 
 
 def pytest_configure(config):
-    """Report steps even for passed tests"""
+
+    # do not add logs from REPORTLOGS_LOGGER_NAME in the report
+    logger = logging.getLogger(REPORTLOGS_LOGGER_NAME)
+    logger.disabled = True
+
+    # add steps/useful info even on PASSED
     if "P" not in config.option.reportchars:
         config.option.reportchars += "P"
 
@@ -43,20 +39,12 @@ def pytest_runtest_teardown(item, nextitem):
     reported_logs = __report_logger.get_logs()
 
     if reported_logs:
-
-        # format the report
         content_section = ""
-        steps_counter = 0
-        for data in reported_logs:
-            msg, is_step = data
-            if is_step:
-                steps_counter += 1
-                content_section += _log_formatter(msg, steps_counter)
-            else:
-                content_section += _log_formatter(msg)
+        for msg in reported_logs:
+            content_section += msg
 
         item.add_report_section(
             when="teardown",
-            key="reported logs",
+            key=REPORTLOGS_SECTION_HEADER,
             content=content_section,
         )
