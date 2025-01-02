@@ -25,18 +25,14 @@ Import and use **report_log** in the test file.
 from pytest_reportlogs import report_log
 
 def test_step_example():
-    report_log("An example of a test step")  # this info is reported as a test step
+    # this info is reported as a test step
+    report_log("An example of a test step", is_step=True) 
 
 > Output:
 │$ pytest test_step_example.py
-│===================================== test session starts ======================================
-│test_step_example.py .                                                                   [100%]
-│
-│============================================ PASSES ============================================
-│------------------------------- Captured reported logs teardown --------------------------------
-│    [Step #1] An example of a test step ------------------------------------ [OK]
-│====================================== 1 passed in 0.01s =======================================
-
+|==================================== PASSES ====================================
+|----------------------- Captured reported logs teardown ------------------------
+|[STEP #001] An example of a test step ------------------------------------- [OK]
 
 ```
 
@@ -44,18 +40,13 @@ def test_step_example():
 ```
 from pytest_reportlogs import report_log
 
-def test_log_example():
-    # report info without formatting it as a test step -> 2nd arg False
-    report_log("An example of useful information", False)
+def test_simple_log_example():
+    report_log("An example of useful information")
 
 > Output:
-│$ pytest test_log_example.py 
-│===================================== test session starts ======================================
-│test_log_example.py .                                                                    [100%]
-│
-│============================================ PASSES ============================================
-│------------------------------- Captured reported logs teardown --------------------------------
-│        An example of useful information
-│====================================== 1 passed in 0.01s =======================================
+│$ pytest test_simple_log_example.py 
+|==================================== PASSES ====================================
+|----------------------- Captured reported logs teardown ------------------------
+|[  INFO>  ] An example of useful information 
 
 ```

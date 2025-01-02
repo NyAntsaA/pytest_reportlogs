@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "pytest_reportlogs"
-version = "0.2.0"
+version = "0.2.1"
 description = "A pytest plugin to add a extra logs to the final report, mainly meant to report test steps"
 readme = "README.md"
 authors = [
