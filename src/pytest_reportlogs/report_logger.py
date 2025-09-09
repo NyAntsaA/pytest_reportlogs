@@ -5,7 +5,8 @@ import logging
 logging.basicConfig(level=logging.DEBUG)
 REPORTLOGS_LOGGER_NAME = "pytest_reportlogs"
 MAX_LOG_LENGTH = 80
-STEP_PASSED_MARKER = "- [OK]"
+STEP_PASSED_MARKER = "- [PASS]"
+STEP_FAILED_MARKER = "- [FAIL]"
 
 
 class Singleton(object):
@@ -21,7 +22,7 @@ class ReportLogger(Singleton):
         self._steps_counter = 0
         self._logger = logging.getLogger(REPORTLOGS_LOGGER_NAME)
 
-    def report_log(self, msg: str, is_step: bool = False):
+    def report_log(self, msg: str, step_status: bool = None):
         """
         API for reporting useful information
         This is the only interface to be used in the tests
@@ -31,16 +32,21 @@ class ReportLogger(Singleton):
         msg: str
             the useful information to be reported
 
-        is_step: bool, optional
-            set it to
-             - True if the information should be treated as a test step
-             - False if a simple useful information
-            default: False
+        step_status: bool, optional
+            If not set, the information is treated as a normal log
+
+            Set it to
+             - True if the information should be treated as a PASSED step
+             - False if the information should be treated as a FAILED step
+            default: None
 
         """
-        formatted_msg = self._log_formatter(msg, is_step)
+        formatted_msg = self._log_formatter(msg, step_status)
         self._logs.append(formatted_msg)
-        self._logger.info(formatted_msg.strip())
+        if step_status is False:
+            self._logger.error(formatted_msg.strip())
+        else:
+            self._logger.info(formatted_msg.strip())
 
     def get_logs(self):
         return self._logs
@@ -49,7 +55,7 @@ class ReportLogger(Singleton):
         self._logs = []
         self._steps_counter = 0
 
-    def _log_formatter(self, msg, is_step=False):
+    def _log_formatter(self, msg, step_status=False):
         """
         Make logs pretty
             - steps logs are prefixed by `[step #]`
@@ -60,15 +66,15 @@ class ReportLogger(Singleton):
         info_prefix = "[  INFO>  ] "
         multiline_info_prefix = " " * (len(info_prefix) + 2)
 
-        if is_step:
+        if step_status is not None:
             self._steps_counter += 1
             formatted_msg += f"[STEP #{self._steps_counter:03d}] {msg} "
-            formatted_msg += "-" * (MAX_LOG_LENGTH - len(STEP_PASSED_MARKER))
-            formatted_msg = formatted_msg[: (MAX_LOG_LENGTH - len(STEP_PASSED_MARKER))]
-            formatted_msg += STEP_PASSED_MARKER + "\n"
+            marker = STEP_PASSED_MARKER if step_status else STEP_FAILED_MARKER
+            formatted_msg += "-" * (MAX_LOG_LENGTH - len(marker))
+            formatted_msg = formatted_msg[: (MAX_LOG_LENGTH - len(marker))]
+            formatted_msg += marker + "\n"
         else:
             for j, m in enumerate(msg.splitlines()):
-                # prefix = "    " if j else "> "
                 prefix = multiline_info_prefix if j else info_prefix
                 formatted_msg += f"{prefix}{m}\n"
 
