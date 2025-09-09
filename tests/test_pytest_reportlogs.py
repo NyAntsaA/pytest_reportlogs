@@ -2,6 +2,8 @@
 
 import logging
 
+import pytest
+
 from pytest_reportlogs import report_log
 
 logging.basicConfig(level=logging.DEBUG)
@@ -78,3 +80,10 @@ def test_mixed_steps_and_useful_info():
         step_status=True,
     )
     report_log("Some other useful information")
+
+
+@pytest.mark.skip("Skip this test")
+def test_skipped():
+    """Check that skipped tests do not have logs in pytest-html"""
+
+    logger.info("This test should be skipped")

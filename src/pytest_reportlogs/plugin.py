@@ -18,7 +18,9 @@ report_log = __report_logger.report_log  # import this in test
 
 @pytest.fixture(scope="function", autouse=True)
 def steps_list():
+
     __report_logger.clear_logs()
+
     yield
 
 
@@ -48,3 +50,6 @@ def pytest_runtest_teardown(item, nextitem):
             key=REPORTLOGS_SECTION_HEADER,
             content=content_section,
         )
+
+        # clear logs once added to report section
+        __report_logger.clear_logs()
