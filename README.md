@@ -26,13 +26,13 @@ from pytest_reportlogs import report_log
 
 def test_step_example():
     # this info is reported as a test step
-    report_log("An example of a test step", is_step=True) 
+    report_log("Simple passed test step description", step_status=True)
+    report_log("Simple failed test step description", step_status=False)
 
 > Output:
 │$ pytest test_step_example.py
-|==================================== PASSES ====================================
-|----------------------- Captured reported logs teardown ------------------------
-|[STEP #001] An example of a test step ------------------------------------- [OK]
+|[STEP #001] Simple passed test step description ----- [PASS]
+|[STEP #002] Simple failed test step description ----- [FAIL]
 
 ```
 
@@ -44,9 +44,7 @@ def test_simple_log_example():
     report_log("An example of useful information")
 
 > Output:
-│$ pytest test_simple_log_example.py 
-|==================================== PASSES ====================================
-|----------------------- Captured reported logs teardown ------------------------
+│$ pytest test_simple_log_example.py
 |[  INFO>  ] An example of useful information 
 
 ```

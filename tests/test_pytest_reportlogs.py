@@ -2,6 +2,8 @@
 
 import logging
 
+import pytest
+
 from pytest_reportlogs import report_log
 
 logging.basicConfig(level=logging.DEBUG)
@@ -14,17 +16,25 @@ def test_steps_formatting():
     logger.info("Starting test test_steps_formatting")
 
     a = b = 0
-    assert a == b
-    report_log(
-        "Simple test step description",
-        is_step=True,
-    )
+    for _ in range(2):
+        try:
+            assert a == b
+            report_log(
+                "Simple passed test step description",
+                step_status=True,
+            )
+            a += 1
+        except:
+            report_log(
+                "Simple failed test step description",
+                step_status=False,
+            )
 
     a = b = 1
     assert a == b
     report_log(
         "Very long test step description" + "* " * 100,
-        is_step=True,
+        step_status=True,
     )
 
 
@@ -59,7 +69,7 @@ def test_mixed_steps_and_useful_info():
     assert a == b
     report_log(
         "Some test step description",
-        is_step=True,
+        step_status=True,
     )
     report_log("Some useful information")
 
@@ -67,6 +77,13 @@ def test_mixed_steps_and_useful_info():
     assert a == b
     report_log(
         "Some other test step description",
-        is_step=True,
+        step_status=True,
     )
     report_log("Some other useful information")
+
+
+@pytest.mark.skip("Skip this test")
+def test_skipped():
+    """Check that skipped tests do not have logs in pytest-html"""
+
+    logger.info("This test should be skipped")
